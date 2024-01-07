@@ -14,7 +14,7 @@ def status():
 
 
 @app_views.route('/stats', strict_slashes=False)
-def get_stats():
+def count():
     stats = {
             'amenities': storage.count('Amenity'),
             'cities': storage.count('City'),
@@ -24,3 +24,7 @@ def get_stats():
             'users': storage.count('User')
             }
     return jsonify(stats)
+
+
+if __name__ == "__main__":
+    pass
