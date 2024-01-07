@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines the DBStorage class for database storage"""
 import os
+import models
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import BaseModel, Base
@@ -104,3 +105,26 @@ class DBStorage:
         """Close the Session
         """
         self.__session.close()
+
+    def get(self, cls, id):
+        """
+        retrieve an object
+        """
+        if cls in all_classes.values():
+            all_cls = models.storage.all(cls)
+            for value in all_cls.values():
+                if (value.id == id):
+                    return value
+        else:
+            return None
+
+    def count(self, cls=None):
+        """
+        count the nmber of objects in storage
+        """
+        if cls is not None:
+            total_count = 0
+            for clss in all_classes.values():
+                total_count += len(models.storage.all(clss).values())
+            return total_count
+        return len(models.storage.all(cls).values())
