@@ -8,6 +8,7 @@ from models import storage
 from models.city import City
 from models.state import State
 
+
 @app_views.route('/states/<state_id>/cities')
 def cities_by_state(state_id):
     """ Handles GET and POST requests for City """
@@ -16,7 +17,7 @@ def cities_by_state(state_id):
         abort(404)
 
     if request.method == 'GET':
-        cities = [city.to.dict() for city in state.cities]
+        cities = [city.to_dict() for city in state.cities]
         return jsonify(cities)
 
     if request.method == 'POST':
@@ -26,7 +27,6 @@ def cities_by_state(state_id):
 
         if 'name' not in data:
             abort(400, description="Missing name")
-
 
         data['state_id'] = state_id
         new_city = City(**data)
