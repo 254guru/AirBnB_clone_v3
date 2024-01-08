@@ -15,6 +15,9 @@ from models.review import Review
 from models.state import State
 from models.user import User
 import json
+from models import storage
+
+
 FileStorage = file_storage.FileStorage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
@@ -65,3 +68,23 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    def test_get(self):
+        """Test the get method"""
+        # Test with an existing ID
+        state = storage.get(State, self.state.id)
+        self.assertEqual(state.id, self.state.id)
+
+        # Test with a non-existing ID
+        state = storage.get(State, "non-existing-id")
+        self.assertIsNone(state)
+
+    def test_count(self):
+        """Test the count method"""
+        # Test with a class
+        count = storage.count(State)
+        self.assertEqual(count, 1)
+
+        # Test without a class
+        count = storage.count()
+        self.assertGreaterEqual(count, 1)
