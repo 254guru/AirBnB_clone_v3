@@ -6,7 +6,6 @@ from models.place import Place
 from models.review import Review
 from api.v1.views import app_views
 
-app.url_map.strict_slashes = True
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
