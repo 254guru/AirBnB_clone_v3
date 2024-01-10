@@ -9,7 +9,6 @@ from api.v1.views import app_views
 Handles RESTful API actions for Review objects
 """
 
-
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
 def get_reviews(place_id):
