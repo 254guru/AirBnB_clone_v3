@@ -7,11 +7,6 @@ from flask import jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
 from models.place import Place
-from models.city import City
-from models.user import User
-from models.state import State
-from models.amenity import Amenity
-from flasgger.utils import swag_from
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -84,3 +79,48 @@ def update_place(place_id):
             setattr(place, key, value)
     place.save()
     return jsonify(place.to_dict()), 200
+
+
+@app_views.route('/places_search', methods=['POST'],
+                 strict_slashes=False)
+def places_search():
+    """Searches for Place objects based on JSON body content"""
+    try:
+        request_data = request.get_json()
+        if request_data is None:
+            raise ValueError("Not a JSON")
+    except ValueError as e:
+        abort(400, str(e))
+
+    states_ids = request_data.get('states', [])
+    cities_ids = request_data.get('cities', [])
+    amenities_ids = request_data.get('amenities', [])
+
+    if not states_ids and not cities_ids and not amenities_ids:
+        places = storage.all(Place).values()
+        return jsonify([place.to_dict() for place in places])
+
+    # Filter by states
+    filtered_places = []
+    for state_id in states_ids:
+        state = storage.get(State, state_id)
+        if state:
+            filtered_places.extend(state.places)
+
+    # Filter by cities
+    for city_id in cities_ids:
+        city = storage.get(City, city_id)
+        if city and city not in filtered_places:
+            filtered_places.extend(city.places)
+
+    # Filter by amenities
+    amenities = [storage.get(Amenity, amenity_id)
+                 for amenity_id in amenities_ids]
+    amenities = list(filter(None, amenities))
+
+    if amenities:
+        filtered_places = [place for place in filtered_places
+                           if all(amenity in place.amenities
+                                  for amenity in amenities)]
+
+    return jsonify([place.to_dict() for place in filtered_places])
