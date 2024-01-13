@@ -11,13 +11,10 @@ from models.state import State
 from models.city import City
 from models.user import User
 from models.amenity import Amenity
-from flasgger.utils import swag_from
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/place/get_places_by_city.yml',
-           methods=['GET'])
 def get_places_by_city(city_id):
     """Retrieves the list of all Place objects of a City"""
     city = storage.get(City, city_id)
@@ -29,7 +26,6 @@ def get_places_by_city(city_id):
 
 @app_views.route('/places/<place_id>', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/place/get_place.yml', methods=['GET'])
 def get_place(place_id):
     """Retrieves a Place object"""
     place = storage.get(Place, place_id)
@@ -40,7 +36,6 @@ def get_place(place_id):
 
 @app_views.route('/places/<place_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/place/delete_place.yml', methods=['DELETE'])
 def delete_place(place_id):
     """Deletes a Place object"""
     place = storage.get(Place, place_id)
@@ -53,7 +48,6 @@ def delete_place(place_id):
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/place/create_place.yml', methods=['POST'])
 def create_place(city_id):
     """Creates a Place"""
     city = storage.get(City, city_id)
@@ -76,7 +70,6 @@ def create_place(city_id):
 
 @app_views.route('/places/<place_id>', methods=['PUT'],
                  strict_slashes=False)
-@swag_from('documentation/place/update_place.yml', methods=['PUT'])
 def update_place(place_id):
     """Updates a Place object"""
     place = storage.get(Place, place_id)
@@ -94,7 +87,6 @@ def update_place(place_id):
 
 @app_views.route('/places_search', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/place/places_search.yml', methods=['POST'])
 def places_search():
     """Searches for Place objects based on JSON body content"""
     try:
