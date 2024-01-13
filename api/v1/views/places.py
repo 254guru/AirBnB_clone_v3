@@ -117,7 +117,8 @@ def places_search():
     for state_id in states_ids:
         state = storage.get(State, state_id)
         if state:
-            filtered_places.extend(state.places)
+            for city in state.cities:
+                filtered_places.extend(city.places)
 
     # Filter by cities
     for city_id in cities_ids:
